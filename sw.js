@@ -1,15 +1,11 @@
 const CACHE_NAME = 'bjj-workout-v1';
-const ASSETS = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
-  '/icons/icon-192.svg'
-];
+// Populated on install from actual scope
+const ASSET_NAMES = ['index.html', 'styles.css', 'app.js', 'manifest.json', 'icons/icon-192.svg'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+  const scope = self.registration.scope;
+  const assets = [scope, ...ASSET_NAMES.map(a => scope + a)];
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(assets)));
   self.skipWaiting();
 });
 
