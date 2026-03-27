@@ -1,0 +1,48 @@
+const CACHE_NAME = 'bjj-workout-v1';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/styles.css',
+  '/app.js',
+  '/manifest.json',
+  '/icons/icon-192.svg'
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
+
+  // For giphy images: cache-first with network fallback
+  if (url.hostname.includes('giphy.com')) {
+    e.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match(e.request).then(cached => {
+          if (cached) return cached;
+          return fetch(e.request).then(response => {
+            if (response.ok) cache.put(e.request, response.clone());
+            return response;
+          }).catch(() => new Response('', { status: 408 }));
+        })
+      )
+    );
+    return;
+  }
+
+  // For app assets: cache-first
+  e.respondWith(
+    caches.match(e.request).then(cached => cached || fetch(e.request))
+  );
+});

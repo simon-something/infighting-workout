@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="32" fill="#0f0f1a"/>
+  <g transform="translate(96,80)" stroke="#e67e22" stroke-width="6" stroke-linecap="round" fill="none">
+    <circle r="16" cy="-30" fill="#e67e22" stroke="none"/>
+    <line y1="-14" y2="30"/>
+    <line x1="-25" y1="5" x2="25" y2="5"/>
+    <line y1="30" x2="-18" y2="65"/>
+    <line y1="30" x2="18" y2="65"/>
+  </g>
+  <text x="96" y="160" text-anchor="middle" fill="#e67e22" font-family="sans-serif" font-weight="bold" font-size="22">BJJ</text>
+</svg>
