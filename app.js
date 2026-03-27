@@ -246,7 +246,6 @@ function navigate(view, opts) {
   state._history.push({ view: state.view, dayIndex: state.dayIndex, exerciseDetail: state.exerciseDetail });
   Object.assign(state, { view, ...opts });
   render();
-  window.history.pushState(null, '', '');
 }
 
 function goBack() {
@@ -260,21 +259,6 @@ function goBack() {
   }
   render();
 }
-
-window.addEventListener('popstate', (e) => {
-  e.preventDefault();
-  if (state.view === 'workout' && state.workout && !state.workout.done) {
-    // During workout, back = pause
-    state.workout.isPaused = true;
-    renderWorkoutContent();
-    window.history.pushState(null, '', '');
-    return;
-  }
-  goBack();
-});
-
-// Push initial state
-window.history.pushState(null, '', '');
 
 // ─── Rendering ───────────────────────────────────────────────────────────────
 
@@ -405,7 +389,6 @@ function startWorkout() {
   state._history.push({ view: state.view, dayIndex: state.dayIndex });
   state.view = 'workout';
   requestWakeLock();
-  window.history.pushState(null, '', '');
   renderWorkout();
 
   // Preload all GIFs for this workout
