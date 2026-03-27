@@ -255,8 +255,10 @@ function goBack() {
     state.view = prev.view;
     state.dayIndex = prev.dayIndex;
     state.exerciseDetail = prev.exerciseDetail;
-    render();
+  } else {
+    state.view = 'home';
   }
+  render();
 }
 
 window.addEventListener('popstate', (e) => {
@@ -505,8 +507,8 @@ function renderWorkoutContent() {
     `;
     document.getElementById('done-btn').addEventListener('click', () => {
       state.workout = null;
-      state._history = [];
-      state.view = 'home';
+      state._history = [{ view: 'home', dayIndex: state.dayIndex, exerciseDetail: null }];
+      state.view = 'day';
       render();
     });
     return;
@@ -619,7 +621,7 @@ function renderWorkoutContent() {
         clearInterval(w.intervalId);
         releaseWakeLock();
         state.workout = null;
-        state._history = [];
+        state._history = [{ view: 'home', dayIndex: state.dayIndex, exerciseDetail: null }];
         state.view = 'day';
         render();
       }
