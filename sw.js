@@ -1,5 +1,4 @@
-const CACHE_NAME = 'bjj-workout-v1';
-// Populated on install from actual scope
+const CACHE_NAME = 'bjj-workout-v2';
 const ASSET_NAMES = ['index.html', 'styles.css', 'app.js', 'manifest.json', 'icons/icon-192.svg'];
 
 self.addEventListener('install', e => {
@@ -21,7 +20,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // For giphy images: cache-first with network fallback
+  // Giphy images: cache-first
   if (url.hostname.includes('giphy.com')) {
     e.respondWith(
       caches.open(CACHE_NAME).then(cache =>
@@ -37,8 +36,12 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // For app assets: cache-first
+  // App assets: network-first (so updates deploy immediately)
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request).then(response => {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+      return response;
+    }).catch(() => caches.match(e.request))
   );
 });

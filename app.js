@@ -249,6 +249,7 @@ function navigate(view, opts) {
 }
 
 function goBack() {
+  console.log('goBack called, history:', JSON.stringify(state._history), 'current view:', state.view);
   const prev = state._history.pop();
   if (prev) {
     state.view = prev.view;
@@ -257,6 +258,7 @@ function goBack() {
   } else {
     state.view = 'home';
   }
+  console.log('navigating to:', state.view);
   render();
 }
 
